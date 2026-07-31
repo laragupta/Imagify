@@ -51,7 +51,7 @@ what you want to generate placeholder-color'></input>
       <p onClick={()=>{
         setIsImageLoaded(false)
       }} className='bg-transparentborder border-zinc-900 text-black px-8 py-3 rounded-full cursor-pointer' >Generate Another</p>
-      <a href="" download className='bg-zinc-900 px-10 py-3 rounded-full cursor-pointer'>Download</a>
+      <a href={image} download className='bg-zinc-900 px-10 py-3 rounded-full cursor-pointer'>Download</a>
     </div>
 }
     </motion.form>
@@ -59,3 +59,4 @@ what you want to generate placeholder-color'></input>
 }
 
 export default Result;
+// bug here download button is not correct here i pass href="" easrlier now check on github 

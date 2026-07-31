@@ -1,7 +1,10 @@
 import React, { useContext } from 'react';
 import {assets} from '../assets/assets'
+//Imports images like the logo, profile icon, and credit icon.
+//Keeps all image paths in one place for better organization.
 import { Link, useNavigate } from 'react-router-dom';
-
+//Link is used for navigation without reloading the page.
+//useNavigate is used for programmatic navigation after button click
 import buy from '../pages/BuyCredit'
 import { AppContext } from '../context/AppContext';
 

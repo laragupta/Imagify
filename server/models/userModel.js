@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 const userSchema=new mongoose.Schema({
+    /*A Schema is the blueprint (structure) of a document.
+It tells MongoDB:
+"Every user document should look like this."*/
     name:{type:String, required:true},
     email:{type:String, required:true, unique:true},
     password:{

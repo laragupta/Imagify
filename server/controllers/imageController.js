@@ -9,18 +9,17 @@ import FormData from "form-data";
         const { prompt } = req.body;
          
         const user=await userModel.findById(userId);
-        console.log("userId:", userId);
-        console.log("prompt:", prompt);
-        console.log("user:", user);
+        
         
         if(!user || !prompt){
             return res.json({success:false,message:"Missing Details"})
         }
-        if(user.creditBalance==0 || userModel.creditBalance<0){
+        if(user.creditBalance===0 || user.creditBalance<0){
             return res.json({success:false,message:"No credits Balance", creditBalance:user.creditBalance})
 
         }
         const formData= new FormData()
+        //Creates an empty form.
         formData.append('prompt',prompt)
         const {data}=await axios.post('https://clipdrop-api.co/text-to-image/v1',formData,{
             headers:{
@@ -31,7 +30,7 @@ import FormData from "form-data";
         const base64Image=Buffer.from(data,'binary').toString('base64')
         const resultImage=`data:image/png;base64,${base64Image}`
         await userModel.findByIdAndUpdate(user._id,{creditBalance:user.creditBalance-1})
-        res.json({success:true,message:'Image Generator',creditBalance:user.creditBalance-1,resultImage})
+        res.json({success:true,message:'Image generated successfully',creditBalance:user.creditBalance-1,resultImage})
         
     } catch (error) {
         console.log(error)

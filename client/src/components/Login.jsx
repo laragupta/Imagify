@@ -23,6 +23,11 @@ function Login() {
                 backenedUrl + '/api/user/login',
                 { email, password }
             );
+            //We use a POST request for login because the client needs to send sensitive 
+            // information such as the email and password to the backend. These credentials are sent securely
+            //  in the request body rather than the URL. The backend then verifies the user and returns a JWT token 
+            // if authentication is successful. GET is
+            //  intended for retrieving data and is not appropriate for sending sensitive information like passwords.
 
             if (data.success) {
                 setToken(data.token);
@@ -63,6 +68,11 @@ function Login() {
         }
 
     },[])
+    //This useEffect runs once when the Login component mounts. It sets document.body.style.overflow = 'hidden'
+    //  to disable background scrolling while the login popup is open.
+    //  The cleanup function runs when the component unmounts, restoring overflow to 'unset' 
+    // so the page becomes scrollable again. 
+    // The cleanup is important because without it, the website would remain non-scrollable even after closing the popup.
 
   return (
     <div 

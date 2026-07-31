@@ -19,7 +19,10 @@ function BuyCredit() {
     order_id:order.id,
     receipt:order.receipt,
     handler:async(response)=>{
+      //is just a property of the options object.
     try {
+      // now we send response to the backened which we get from razorpay
+      // bcakened veerify payment is genuine or not
       const {data}=await axios.post(backenedUrl+'/api/user/verify-razor',response,{headers:{token}})
       if(data.success){
         localCreditData();
@@ -33,11 +36,18 @@ function BuyCredit() {
     }
     }
   }
+  /*<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   beeacuse of this browser creates window.Razorpay*/
   const rzp=new window.Razorpay(options)
+  //"Create a Razorpay Checkout object using these payment details."
   rzp.open()
+  // tell razorpay open payment window
+  //now user interacts with razorpay  afteer payment 
+  // succed razorpay call handler which is init pay()
 
   }
   const paymentRazorpay = async (planId) => {
+    //Create a payment order before opening Razorpay.
   try {
     if (!user) {
       setShowLogin(true);
@@ -48,10 +58,28 @@ function BuyCredit() {
       backenedUrl + '/api/user/pay-razor',
       { planId, userId: user._id },
       { headers: { token } }
+      // The userId only identifies which user's data to use, but it can be
+      //  modified by anyone on the frontend. Therefore, the backend should always 
+      // trust the verified JWT token, not the userId sent by the client. In many production applications, 
+      // the backend extracts the user
+      //  ID directly from the token instead of accepting it from the request body.
     );
+    //data = {
+   // success:true,
+    /*order:{
+        id:"order_xyz",
+        amount:10000,
+        currency:"INR",
+        receipt:"receipt_1"
+        s simply a merchant's reference number.bill no.
+    }
+}*///this data is send by backened to the frontened 
 
     if (data.success) {
       initPay(data.order);
+ /*No payment has happened yet.
+The user has not entered UPI/Card details yet.
+The only thing we have done is create a payment order.*/
     } else {
       toast.error(data.message);
     }

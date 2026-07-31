@@ -7,6 +7,8 @@ import tranactionModel from "../models/tranactionModel.js";
 const registerUser=async(req,res)=>{
     try {
         const {name,email, password}=req.body;
+        // as frontend send email,name , passowder with axios post express.json convert it
+        // into js and store in req.body 
         if(!name || ! email || ! password){
             return res.json({success:false,message:"Missing Details"})
         }
@@ -23,7 +25,13 @@ const registerUser=async(req,res)=>{
             ,password:hashedPassword
         }
         const newUser= new userModel(userData)
+        //"Create a new document using the User model."
+       
         const user =await newUser.save()
+        // Mongoose automatically saves it into the users collection.
+        /*userModel is a Mongoose model, not the MongoDB collection name. The model acts as a bridge between the
+         application and the MongoDB collection.
+         By default, Mongoose converts the model name (e.g., "user") into the collection name ("users").*/
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
         res.json({success:true,token,user:{name:user.name}})
         
@@ -48,6 +56,9 @@ const loginUser= async (req, res)=>{
             return res.json({success:false,message:"User does not exist"})
         }
         const isMatch=await bcrypt.compare(password,user.password)
+        /*We never compare passwords directly because the database stores hashed passwords.
+         bcrypt.compare() hashes the entered password 
+        using the same salt and compares it with the stored hash*/
         if(isMatch){
               const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
             res.json({success:true,token,user:{name:user.name}})
@@ -70,7 +81,11 @@ const userCredits = async(req,res)=>{
      try {
         const userId = req.userId;
         // we will create a middleware which find the user id from token
-        const user= await userModel.findById(userId)
+  /*Where did req.userId come from?
+It does not come from the frontend.
+It comes from the userAuth middleware.
+        */const user= await userModel.findById(userId)
+        // Now Mongoose searches the users collection
         res.json({success:true,credits:user.creditBalance,user:{name:user.name}})
      } catch (error) {
        console.log(error)
@@ -83,6 +98,7 @@ const razorpayInstance=new razorpay({
     key_id:process.env.RAZORPAY_KEY_ID,
     key_secret:process.env.RAZORPAY_KEY_SECRET
 })
+//his creates an object through which your backend communicates with Razorpay.
 const paymentRazorpay=async(req,res)=>{
     try {
         const userId = req.userId          
@@ -119,8 +135,18 @@ const paymentRazorpay=async(req,res)=>{
         const tranactionData={
             userId,plan,amount,credits,date
         }
+        /*const transactionModel = mongoose.model("transaction", transactionSchema);
+        this create a model  with transaction */
         // store the data in the database
         const newTransaction =await tranactionModel .create(tranactionData)
+        // Create a new record in the transactions collection using this data."
+        /*mongoose.model(...) creates and returns a Model object.
+        transactionModel is just the variable that stores that Model.
+        Why save the transaction before payment?
+
+        Because later, when Razorpay tells us "Payment completed", 
+        we already have a transaction record to update.
+        */ 
         const options={
             amount:amount*100,
             currency:process.env.CURRENCY,
