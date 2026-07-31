@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 
 // Only listen locally, not on Vercel
 if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 
+    const PORT = process.env.PORT || 4000;
     // if port is given than start on that server otherwisee on port 4000
     app.listen(PORT, () => {
         console.log('Server running on port ' + PORT)

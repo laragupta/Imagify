@@ -24,13 +24,13 @@ const App = () => {
     <div className='px-4 sm:px-10 md:px-14 lg:px-28 min-h-screen bg-linear-to-b from-teal-50 to-orange-50'>
       <ToastContainer position='bottom-right'/>
       <Navbar/>
-      //Renders the navigation bar at the top of every page.
+      
      {showLogin &&  <Login/>}
-     //If showLogin is true, the Login component is rendered; otherwise, nothing is displayed.
-      <Routes> //Routes is a React Router component that checks the current browser URL.
+     
+      <Routes> 
        <Route path='/' element={<Home/>}/>
        <Route path='/result' element={<Result/>}/>
-       //When the URL becomes /result, React renders the Result component.
+       
        <Route path='/buyCredit' element={<BuyCredit/>}/>
        
     </Routes>
